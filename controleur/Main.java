@@ -1,7 +1,7 @@
 package controleur;
 
 import Vue.VueConnexion;
-import Vue.vueGenerale;
+import Vue.VueGenerale;
 
 public class Main {
 

@@ -1,29 +1,75 @@
 package modele;
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import controleur.Etudiant;
+import java.util.Formatter;
+
+import controleur.Commande;
+import controleur.User;
+
+
 
 public class Modele {
+	
+	private static String encryptPassword(String password)
+	{
+	    String sha1 = "";
+	    try
+	    {
+	        MessageDigest crypt = MessageDigest.getInstance("SHA-1");
+	        crypt.reset();
+	        crypt.update(password.getBytes("UTF-8"));
+	        sha1 = byteToHex(crypt.digest());
+	    }
+	    catch(NoSuchAlgorithmException e)
+	    {
+	        e.printStackTrace();
+	    }
+	    catch(UnsupportedEncodingException e)
+	    {
+	        e.printStackTrace();
+	    }
+	    return sha1;
+	}
+
+	private static String byteToHex(final byte[] hash)
+	{
+	    Formatter formatter = new Formatter();
+	    for (byte b : hash)
+	    {
+	        formatter.format("%02x", b);
+	    }
+	    String result = formatter.toString();
+	    formatter.close();
+	    return result;
+	}
+	
+	
 	//REALISATION DES QUATRES FONCTIONS 
-	public static ArrayList<Etudiant> selectAll() {
-		ArrayList<Etudiant> lesEtudiants = new ArrayList<Etudiant>();
-		Bdd uneBdd = new Bdd("localhost:3306", "etude", "root", "root");
+	public static ArrayList<User> selectAll() {
+		ArrayList<User> lesUser = new ArrayList<User>();
+		Bdd uneBdd = new Bdd("localhost:3306", "bdd", "root", "root");
 		uneBdd.seConnecter();
-		String requete = "select * from etudiant;";
+		String requete = "select * from  UTILISATEUR;";
 		try{
 			Statement unStat = uneBdd.getMaConnexion().createStatement();
 			ResultSet unRes = unStat.executeQuery(requete);
 			while (unRes.next()) {
-				int idEtudiant = unRes.getInt("idetudiant");
-				String nom = unRes.getString("nom");
-				String prenom = unRes.getString("prenom");
-				String email = unRes.getString("email");
-				String classe = unRes.getString("classe");
-				Etudiant unEtudiant = new Etudiant(idEtudiant, nom, prenom, email, classe);
-				lesEtudiants.add(unEtudiant);
+				int uti_id = unRes.getInt("uti_id");
+				String uti_nom = unRes.getString("uti_nom");
+				String uti_prenom = unRes.getString("uti_prenom");
+				String uti_email = unRes.getString("uti_email");
+				String login = unRes.getString("login");
+				String passwordd = unRes.getString("passwordd");
+				int grp_id = unRes.getInt("grp_id");
+
+		User unUser = new User(uti_id, uti_nom, uti_prenom, uti_email,login,passwordd,grp_id);
+				lesUser.add(unUser);
 			}
 			unStat.close();
 			unRes.close();
@@ -31,12 +77,12 @@ public class Modele {
 		catch (SQLException exp) {
 		System.out.println("Erreur de la requete" + requete);	
 		}
-		return lesEtudiants;
+		return lesUser;
 	}
 	
-	public static void insert (Etudiant unEtudiant) {
-		String requete = "insert into etudiant values (null,'"+unEtudiant.getNom()+"','"+unEtudiant.getPrenom()+"','"+unEtudiant.getEmail()+"','"+unEtudiant.getClasse()+"');";
-		Bdd uneBdd = new Bdd("localhost:8889", "ecoleBenahmed", "root", "root");
+	public static void insert (User unUser) {
+		String requete = "insert into UTILISATEUR values (null,'"+unUser.getUti_nom()+"','"+unUser.getUti_prenom()+"','"+unUser.getUti_email()+"','"+unUser.getLogin()+"','"+unUser.getPasswordd()+"','"+unUser.getGrp_id()+"');";
+		Bdd uneBdd = new Bdd("localhost:3306", "bdd", "root", "root");
 		uneBdd.seConnecter();
 		try{
 			Statement unStat = uneBdd.getMaConnexion().createStatement();
@@ -47,25 +93,31 @@ public class Modele {
 		uneBdd.seDeconnecter();
 	}
 	
-	public static void delete (Etudiant unEtudiant) {
-		String requete = "delete from etudiant where";
-		String tab[] = new String [5];
+	public static void delete (User unUser) {
+		String requete = "delete from UTILISATEUR where";
+		String tab[] = new String [7];
 		int i = 0;
 		
-		if (unEtudiant.getIdEtudiant() != 0) {
-			tab[i++] = " idetudiant ="+unEtudiant.getIdEtudiant();
+		if (unUser.getUti_id() != 0) {
+			tab[i++] = " uti_id ="+unUser.getUti_id();
 		}
-		if (! unEtudiant.getNom().equals("")) {
-			tab[i++] = " nom ='"+unEtudiant.getNom()+"'";
+		if (! unUser.getUti_nom().equals("")) {
+			tab[i++] = " uti_nom ='"+unUser.getUti_nom()+"'";
 		}
-		if (! unEtudiant.getPrenom().equals("")) {
-			tab[i++] = " prenom ='"+unEtudiant.getPrenom()+"'";
+		if (! unUser.getUti_prenom().equals("")) {
+			tab[i++] = " uti_prenom ='"+unUser.getUti_prenom()+"'";
 		}
-		if (! unEtudiant.getEmail().equals("")) {
-			tab[i++] = " email ='"+unEtudiant.getEmail()+"'";
+		if (! unUser.getUti_email().equals("")) {
+			tab[i++] = " uti_email ='"+unUser.getUti_email()+"'";
 		}
-		if (! unEtudiant.getClasse().equals("")) {
-			tab[i++] = " classe ='"+unEtudiant.getClasse()+"'";
+		if (! unUser.getLogin().equals("")) {
+			tab[i++] = " login ='"+unUser.getLogin()+"'";
+		}
+		if (! unUser.getPasswordd().equals("")) {
+			tab[i++] = " passwordd ='"+unUser.getPasswordd()+"'";
+		}
+		if (unUser.getGrp_id() != 0) {
+			tab[i++] = " grp_id ='"+unUser.getGrp_id();
 		}
 		
 		for (int j=0; j < i ; j++) {
@@ -75,7 +127,7 @@ public class Modele {
 				requete += " and " + tab[j];
 			}
 		}
-		Bdd uneBdd = new Bdd("localhost:8889", "ecoleBenahmed", "root", "root");
+		Bdd uneBdd = new Bdd("localhost:3006", "bdd", "root", "root");
 		uneBdd.seConnecter();
 		try{
 			Statement unStat = uneBdd.getMaConnexion().createStatement();
@@ -85,23 +137,26 @@ public class Modele {
 		}
 		uneBdd.seDeconnecter();
 		}
-	public static Etudiant rechercherID(Etudiant unEtudiant) {
-		Etudiant resultat = null;
+	
+	public static User rechercherID(User unUser) {
+		User resultat = null;
 		
-		String requete = "select * from etudiant where "
-		+ "idetudiant = " + unEtudiant.getIdEtudiant()+";";
-		Bdd uneBdd = new Bdd("localhost:3306", "etude", "root", "root");
+		String requete = "select * from UTILISATEUR where "
+		+ "idUser = " + unUser.getUti_id()+";";
+		Bdd uneBdd = new Bdd("localhost:3306", "bdd", "root", "root");
 		uneBdd.seConnecter();
 		try{
 			Statement unStat = uneBdd.getMaConnexion().createStatement();
 			ResultSet unRes = unStat.executeQuery(requete);
 			if (unRes.next()) {
-				int idEtudiant = unRes.getInt("idetudiant");
-				String nom = unRes.getString("nom");
-				String prenom = unRes.getString("prenom");
-				String email = unRes.getString("email");
-				String classe = unRes.getString("classe");
-				resultat = new Etudiant(idEtudiant, nom, prenom, email, classe);
+				int uti_id = unRes.getInt("uti_id");
+				String uti_nom = unRes.getString("uti_nom");
+				String uti_prenom = unRes.getString("uti_prenom");
+				String uti_email = unRes.getString("uti_email");
+				String login = unRes.getString("login");
+				String passwordd = unRes.getString("passwordd");
+				int grp_id = unRes.getInt("grp_id");
+				resultat = new User(uti_id, uti_nom, uti_prenom, uti_email,login,passwordd,grp_id);
 			}
 			unStat.close();
 			unRes.close();
@@ -111,26 +166,28 @@ public class Modele {
 		}
 		return resultat;		
 		}
-	public static ArrayList<Etudiant> rechercher (String mot) {
-		ArrayList<Etudiant> lesEtudiants = new ArrayList<Etudiant>();
-		String requete = "select * from etudiant where "
+	public static ArrayList<User> rechercher (String mot) {
+		ArrayList<User> lesUsers = new ArrayList<User>();
+		String requete = "select * from UTILISATEUR where "
 		+ "nom like '%"+mot+"%' or "
 		+ " prenom like '%"+mot+"%' or "
-		+ " email like '%"+mot+"%' or "
+		+ " email like '%"+mot+"%' or "	
 		+ " classe like '%"+mot+"%' ; ";
-		Bdd uneBdd = new Bdd("localhost", "etude", "root", "root");
+		Bdd uneBdd = new Bdd("localhost", "bdd", "root", "root");
 		uneBdd.seConnecter();
 		try{
 			Statement unStat = uneBdd.getMaConnexion().createStatement();
 			ResultSet unRes = unStat.executeQuery(requete);
 			while (unRes.next()) {
-				int idEtudiant = unRes.getInt("idetudiant");
-				String nom = unRes.getString("nom");
-				String prenom = unRes.getString("prenom");
-				String email = unRes.getString("email");
-				String classe = unRes.getString("classe");
-				Etudiant unEtudiant = new Etudiant(idEtudiant, nom, prenom, email, classe);
-				lesEtudiants.add(unEtudiant);
+				int uti_id = unRes.getInt("uti_id");
+				String uti_nom = unRes.getString("uti_nom");
+				String uti_prenom = unRes.getString("uti_prenom");
+				String uti_email = unRes.getString("uti_email");
+				String login = unRes.getString("login");
+				String passwordd = unRes.getString("passwordd");
+				int grp_id = unRes.getInt("grp_id");
+				User unUser = new User(uti_id, uti_nom, uti_prenom, uti_email,login,passwordd,grp_id);
+				lesUsers.add(unUser);
 			}
 			unStat.close();
 			unRes.close();
@@ -138,7 +195,7 @@ public class Modele {
 		catch (SQLException exp) {
 		System.out.println("Erreur de la requete" + requete);	
 		}
-		return lesEtudiants;
+		return lesUsers;
 	}
 	
 	public static String [] verifConnexion (String login, String mdp) {
@@ -147,15 +204,19 @@ public class Modele {
 		tab[1]= mdp;
 		tab[2]= "";
 		
-		String requete="Select * from user where login ='"
-				+login+"' AND mdp = '" +mdp+"' ;";
-		Bdd uneBdd = new Bdd("localhost", "etude", "root", "root");
+		//cryptage du mdp :
+		mdp = Modele.encryptPassword(mdp);
+		System.out.println(mdp);
+		
+		String requete="Select * from utilisateur where login ='"
+				+login+"' AND passwordd = '" +mdp+"' ;";
+		Bdd uneBdd = new Bdd("localhost:3306", "bdd", "root", "root");
 		uneBdd.seConnecter();
 		try{
 			Statement unStat = uneBdd.getMaConnexion().createStatement();
 			ResultSet unRes = unStat.executeQuery(requete);
 			if (unRes.next()) {
-				tab[2] = unRes.getString("droits");
+				tab[2] = unRes.getString("grp_id");
 			} 
 		} catch (SQLException exp) {
 			System.out.println("Erreur execution :" + requete);
@@ -163,6 +224,63 @@ public class Modele {
 		uneBdd.seDeconnecter();
 		return tab;
 	}
+//----------------------------------------------------------------------------
+	//fonction pour lister les commandes
+	public static ArrayList<Commande> selectAllCom() {
+		ArrayList<Commande> lesCommandes = new ArrayList<Commande>();
+		Bdd uneBdd = new Bdd("localhost:3306", "bdd", "root", "root");
+		uneBdd.seConnecter();
+		String requete = "select * from  COMMANDE;";
+		try{
+			Statement unStat = uneBdd.getMaConnexion().createStatement();
+			ResultSet unRes = unStat.executeQuery(requete);
+			while (unRes.next()) {
+				int com_num = unRes.getInt("com_num");
+				String com_date = unRes.getString("com_date");
+				String com_text = unRes.getString("com_text");
+				int com_prest = unRes.getInt("com_prest");
+				int uti_id = unRes.getInt("uti_id");
+				int fact_num = unRes.getInt("fact_num");
+
+				Commande uneCommande = new Commande(com_num, com_date, com_text, com_prest,uti_id,fact_num);
+				lesCommandes.add(uneCommande);
+			}
+			unStat.close();
+			unRes.close();
+		}
+		catch (SQLException exp) {
+		System.out.println("Erreur de la requete" + requete);	
+		}
+		return lesCommandes;
+	}
+	//fonction pour ajouter
+	public static void insertCommande (Commande uneCommande) {
+		String requete = "insert into Commande values (null,'"+uneCommande.getCom_date()+"','"+uneCommande.getCom_text()+"','"+uneCommande.getCom_prest()+"','"+uneCommande.getUti_id()+"','"+uneCommande.getFact_num()+"');";
+		Bdd uneBdd = new Bdd("localhost:3306", "bdd", "root", "root");
+		uneBdd.seConnecter();
+		try{
+			Statement unStat = uneBdd.getMaConnexion().createStatement();
+			unStat.execute(requete);
+		} catch (SQLException exp) {
+			System.out.println("Erreur requete : "+ requete);
+		}
+		uneBdd.seDeconnecter();
+	}
+	
+	//fonction pour supprimer commande  
+	public static void deleteCommande (Commande uneCommande) {
+		String requete = "delete from COMMANDE where com_num ="+uneCommande.getCom_num()+";";
+		
+		Bdd uneBdd = new Bdd("localhost:306", "bdd", "root", "root");
+		uneBdd.seConnecter();
+		try{
+			Statement unStat = uneBdd.getMaConnexion().createStatement();
+			unStat.execute(requete);
+		} catch (SQLException exp) {
+			System.out.println("Erreur requete :"+ requete);
+		}
+		uneBdd.seDeconnecter();
+		}
 }
 
 

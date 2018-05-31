@@ -11,7 +11,7 @@ import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
-import controleur.Etudiant;
+import controleur.User;
 import modele.Modele;
 
 public class PanelRechercher extends JPanel implements ActionListener{
@@ -47,28 +47,31 @@ public class PanelRechercher extends JPanel implements ActionListener{
 		if(e.getSource() == this.btOk) {
 			String chaine = this.cbxIdEtudiant.getSelectedItem().toString();
 			String tab[] = chaine.split(" - ");
-			int idEtudiant = Integer.parseInt(tab[0]);
-			Etudiant unEtudiant = new Etudiant(idEtudiant, tab[1],tab[2],"","");
-			unEtudiant = Modele.rechercherID(unEtudiant);
-			if(unEtudiant != null) {
-				chaine = "ID Etudiant : " + unEtudiant.getIdEtudiant() + "\n" +
-					"Nom : " + unEtudiant.getNom() + "\n" +
-					"Prenom : " + unEtudiant.getPrenom() + "\n" +
-					"Email : " + unEtudiant.getEmail() + "\n" +
-					"Classe : " + unEtudiant.getClasse() + "\n";
+			int uti_id = Integer.parseInt(tab[0]);
+			int grp_id = Integer.parseInt(tab[1]);
+			User unUser = new User(uti_id, "","","","","",grp_id);
+			unUser = Modele.rechercherID(unUser);
+			if(unUser != null) {
+				chaine = "ID User : " + unUser.getUti_id() + "\n" +
+					"Nom : " + unUser.getUti_nom() + "\n" +
+					"Prenom : " + unUser.getUti_prenom() + "\n" +
+					"Email : " + unUser.getUti_email() + "\n" +
+					"Login : " + unUser.getLogin() + "\n" +
+					"Password : " + unUser.getPasswordd() + "\n" +
+					"grP_id : " + unUser.getGrp_id() + "\n";
 				this.txtResultat.setText(chaine);
 			} else {
-				this.txtResultat.setText("Aucun Etudian trouvé");
+				this.txtResultat.setText("Aucun User trouvé");
 			}
 			
 		}
 	}
 	
 	public void remplirCBX() {
-		ArrayList<Etudiant> lesEtudiants = Modele.selectAll();
+		ArrayList<User> lesEtudiants = Modele.selectAll();
 		this.cbxIdEtudiant.removeAllItems();
-		for(Etudiant unEtudiant : lesEtudiants){
-			String chaine = unEtudiant.getIdEtudiant() + " - " + unEtudiant.getNom() + " - " + unEtudiant.getPrenom() ;
+		for(User unUser : lesEtudiants){
+			String chaine = unUser.getUti_id() + " - " + unUser.getUti_nom() + " - " + unUser.getUti_prenom()+ "-" + unUser.getUti_email()+ "-" + unUser.getLogin()+ "-" + unUser.getPasswordd()+ "-" + unUser.getGrp_id();                               
 			this.cbxIdEtudiant.addItem(chaine);
 		}
 	}

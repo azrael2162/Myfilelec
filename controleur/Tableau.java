@@ -24,6 +24,16 @@ public class Tableau extends AbstractTableModel{
 	public int getColumnCount() {
 		return this.entetes.length;
 	}
+	
+	
+
+	@Override
+	public String getColumnName(int column) {
+		 
+		return this.entetes[column];
+	}
+
+
 
 	@Override
 	public Object getValueAt(int ligne, int colonne) {

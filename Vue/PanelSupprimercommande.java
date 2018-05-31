@@ -14,34 +14,35 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 import controleur.User;
+import controleur.Commande;
 import controleur.Tableau;
 import modele.Modele;
 
-public class PanelSupprimer extends JPanel implements ActionListener{
+public class PanelSupprimercommande extends JPanel implements ActionListener{
 
-	private JTable tableUser;	
+	private JTable tablecommande;	
 	private JPanel unPanel = new JPanel();
 	private Tableau unTableau;
 	
-	public PanelSupprimer() {
-		this.setBounds(130, 50, 370, 300);
+	public PanelSupprimercommande() {
+		this.setBounds(150, 50, 450, 300);
 		this.setBackground(Color.gray);
 		this.setLayout(null);
 		
 		//construction de la JTable
-		String entetes []= {"iduser", "Nom","Prénom","email", "login","password","grp_id"};
+		String entetes []= {"com_num", "com_date","com_text","com_prest","fact_num", "uti_id"};
 		Object donnees [][] = this.getDonnees(); //matrice
 		
 		this.unTableau = new Tableau(donnees, entetes);
 		
-		this.tableUser = new JTable(this.unTableau);
+		this.tablecommande = new JTable(this.unTableau);
 		//insersion de la Jtable dans JScroll
-		JScrollPane unScroll = new JScrollPane(tableUser);
-		unScroll.setBounds(20,20,330,200);
+		JScrollPane unScroll = new JScrollPane(tablecommande);
+		unScroll.setBounds(20,20,450,200);
 		this.add(unScroll);
 		
 		//ajouter le click sur la table 
-		this.tableUser.addMouseListener(new MouseListener() {
+		this.tablecommande.addMouseListener(new MouseListener() {
 			
 			@Override
 			public void mouseReleased(MouseEvent e) {
@@ -69,12 +70,12 @@ public class PanelSupprimer extends JPanel implements ActionListener{
 			
 			@Override
 			public void mouseClicked(MouseEvent m) {
-				int ligne = tableUser.getSelectedRow();
-				int uti_id = Integer.parseInt(tableUser.getValueAt(ligne, 0).toString());
+				int ligne = tablecommande.getSelectedRow();
+				int com_num = Integer.parseInt(tablecommande.getValueAt(ligne, 0).toString());
 				int retour = JOptionPane.showConfirmDialog(null, "Voulez vous supprimer ?","Confirmation", JOptionPane.YES_NO_OPTION);
 				if(retour==0) {
-					User unUser = new User(uti_id,"","","","","", retour);
-					Modele.delete(unUser);
+					Commande uneCommande = new Commande(com_num);
+					Modele.deleteCommande(uneCommande);
 					JOptionPane.showMessageDialog(null, "Suppression réussie !");
 					unTableau.delete(ligne);
 				}
@@ -86,17 +87,16 @@ public class PanelSupprimer extends JPanel implements ActionListener{
 		this.setVisible(false);
 	}
 	private Object [][] getDonnees() {
-		ArrayList<User> lesUsers = Modele.selectAll();
-		Object donnees[][] = new Object [lesUsers.size()][7];
+		ArrayList<Commande> lesCmds = Modele.selectAllCom();
+		Object donnees[][] = new Object [lesCmds.size()][6];
 		int i =0;
-		for (User unUser : lesUsers) {
-			donnees[i][0] = unUser.getUti_id()+"";
-			donnees[i][1] = unUser.getUti_nom();
-			donnees[i][2] = unUser.getUti_prenom();
-			donnees[i][3] = unUser.getUti_email();
-			donnees[i][4] = unUser.getLogin();
-			donnees[i][5] = unUser.getPasswordd();
-			donnees[i][6] = unUser.getGrp_id();
+		for (Commande uneCmde : lesCmds) {
+			donnees[i][0] = uneCmde.getCom_num()+"";
+			donnees[i][1] = uneCmde.getCom_date();
+			donnees[i][2] = uneCmde.getCom_text();
+			donnees[i][3] = uneCmde.getCom_prest();
+			donnees[i][4] = uneCmde.getFact_num();
+			donnees[i][5] = uneCmde.getUti_id();
 			i++;
 		}
 		return donnees;

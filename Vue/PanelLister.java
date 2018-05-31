@@ -1,7 +1,6 @@
 package Vue;
 
 import java.awt.Color;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -10,13 +9,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-import controleur.Etudiant;
+import controleur.User;
 import controleur.Tableau;
 import modele.Modele;
 
 public class PanelLister extends JPanel implements ActionListener{
 
-	private JTable tableEtudiants;
+	private JTable tableUser;
 	private Tableau unTableau;
 	
 	public PanelLister() {
@@ -25,12 +24,12 @@ public class PanelLister extends JPanel implements ActionListener{
 		this.setLayout(null);
 		
 		//construction de la JTable
-		String entetes []= {"idEtudiant", "Nom","Prénom","Email", "Classe"};
+		String entetes []= {"iduser", "Nom","Prénom","Email", "login", "password", "grp_id"};
 		Object [][]donnees = this.getDonnees();
 		unTableau = new Tableau(donnees, entetes);
-		this.tableEtudiants = new JTable(unTableau);
+		this.tableUser = new JTable(unTableau);
 		//insersion de la Jtable dans JScroll
-		JScrollPane unScroll = new JScrollPane(tableEtudiants);
+		JScrollPane unScroll = new JScrollPane(tableUser);
 		unScroll.setBounds(20,20,330,200);
 		this.add(unScroll);
 		
@@ -38,16 +37,19 @@ public class PanelLister extends JPanel implements ActionListener{
 		this.setVisible(false);
 	}
 	public Object [][] getDonnees() {
-		ArrayList<Etudiant> lesEtudiants = Modele.selectAll();
+		ArrayList<User> lesUser = Modele.selectAll();
 	
-		Object donnees[][] = new Object [lesEtudiants.size()][5];
+		Object donnees[][] = new Object [lesUser.size()][7];
 		int i =0;
-		for (Etudiant unEtudiant : lesEtudiants) {
-			donnees[i][0] = unEtudiant.getIdEtudiant()+"";
-			donnees[i][1] = unEtudiant.getNom();
-			donnees[i][2] = unEtudiant.getPrenom();
-			donnees[i][3] = unEtudiant.getEmail();
-			donnees[i][4] = unEtudiant.getClass();
+		for (User unUser : lesUser) {
+			donnees[i][0] = unUser.getUti_id()+"";
+			donnees[i][1] = unUser.getUti_nom();
+			donnees[i][2] = unUser.getUti_prenom();
+			donnees[i][3] = unUser.getUti_email();
+			donnees[i][4] = unUser.getLogin();
+			donnees[i][5] = unUser.getPasswordd();
+			donnees[i][6] = unUser.getGrp_id();
+
 			i++;
 		}
 		return donnees;

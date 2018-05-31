@@ -28,8 +28,16 @@ public class VueConnexion extends JFrame implements ActionListener, KeyListener{
 	
 	private JPanel unPanel = new JPanel();
 	
+	
+	private static VueGenerale uneVueGenerale = new VueGenerale();
+	
+	public static void rendreVisible (boolean action)
+	{
+		uneVueGenerale.setVisible(action);
+	}
+	
 	public VueConnexion () {
-		this.setTitle("Connexion a l'application scolarité ");
+		this.setTitle("Connexion a l'application Myfilelec");
 		this.setLayout(null);
 		//this.getContentPane().setBackground(Color.cyan);
 		this.setBounds(200, 200, 400, 300);
@@ -54,13 +62,13 @@ public class VueConnexion extends JFrame implements ActionListener, KeyListener{
 		
 		this.add(this.unPanel);
 		
-		ImageIcon logof = new ImageIcon("src/img/school.png");
+		ImageIcon logof = new ImageIcon("img/user.png");
 		this.setIconImage(logof.getImage());
 		
-		ImageIcon logo = new ImageIcon("src/img/school.png");
+		ImageIcon logo = new ImageIcon("img/user.png");
 		
 		JLabel entete = new JLabel("",logo,JLabel.CENTER);
-		entete.setBounds(90,0,200,110);
+		entete.setBounds(30,25,100,100);
 		this.add(entete);
 		
 		//rendre les deux boutons ecoutables
@@ -74,7 +82,7 @@ public class VueConnexion extends JFrame implements ActionListener, KeyListener{
 		
 	}
 	
-	private void traitement() {
+	private void Traitement() {
 		String login = this.txtLogin.getText();
 		String mdp = new String(this.pwMdp.getPassword());
 		if (login.equals("") || mdp.equals("")) {
@@ -90,7 +98,7 @@ public class VueConnexion extends JFrame implements ActionListener, KeyListener{
 			
 				//on rend la fenetre de connexion invisible et on lance la fenetre générale.
 				Main.rendreVisible(false);
-				new vueGenerale();
+				uneVueGenerale.setVisible(true);
 				this.txtLogin.setText("");
 				this.pwMdp.setText("");
 				
@@ -105,7 +113,7 @@ public class VueConnexion extends JFrame implements ActionListener, KeyListener{
 			this.txtLogin.setText("");
 			this.pwMdp.setText("");
 		} else if (e.getSource()==this.btConnexion) {
-			traitement();
+			Traitement();
 		}
 	}
 	
@@ -115,7 +123,7 @@ public class VueConnexion extends JFrame implements ActionListener, KeyListener{
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_ENTER){
-			traitement();
+			Traitement();
 		}
 		
 	}

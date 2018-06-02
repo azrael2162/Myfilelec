@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Formatter;
 
+import controleur.Archive;
 import controleur.Commande;
 import controleur.User;
 
@@ -280,6 +281,37 @@ public class Modele {
 			System.out.println("Erreur requete :"+ requete);
 		}
 		uneBdd.seDeconnecter();
+		}
+	//-----------------------------------------------------------
+	
+	//fonction pour archiver
+	
+	//fonction pour lister les commandes
+		public static ArrayList<Archive> selectAllarch() {
+			ArrayList<Archive> lesArchives = new ArrayList<Archive>();
+			Bdd uneBdd = new Bdd("localhost:3306", "bdd", "root", "root");
+			uneBdd.seConnecter();
+			String requete = "select * from  infoarch;";
+			try{
+				Statement unStat = uneBdd.getMaConnexion().createStatement();
+				ResultSet unRes = unStat.executeQuery(requete);
+				while (unRes.next()) {
+					String uti_nom = unRes.getString("uti_nom");
+					String uti_prenom = unRes.getString("uti_prenom");
+					String fact_reglement = unRes.getString("fact_reglement");
+					int fact_prix = unRes.getInt("fact_prix");
+					
+
+					Archive uneArchive = new Archive(uti_nom, uti_prenom, fact_reglement, fact_prix);
+					lesArchives.add(uneArchive);
+				}
+				unStat.close();
+				unRes.close();
+			}
+			catch (SQLException exp) {
+			System.out.println("Erreur de la requete" + requete);	
+			}
+			return lesArchives;
 		}
 }
 

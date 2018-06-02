@@ -16,11 +16,13 @@ public class VueGenerale extends JFrame implements ActionListener
 
 	private JButton btUsers =  new  JButton("Gestion des utilisateurs") ;
 	private JButton btCommandes =  new  JButton("Gestion des Commandes") ;
+	private JButton btArchive = new JButton("Gestion des Archives");
 	private JButton btQuitter =  new  JButton("Quitter") ;
 	
 	private static VueUser uneVueUser = new VueUser() ;
 	private static VueCommandes uneVueCommandes = new VueCommandes() ;
-	
+	private static VueArchives uneVueArchives = new VueArchives();
+
 	public static void rendreVisibleUser (boolean action)
 	{
 		uneVueUser.setVisible(action);
@@ -31,6 +33,10 @@ public class VueGenerale extends JFrame implements ActionListener
 		uneVueCommandes.setVisible(action);
 	}
 	
+	public static void rendreVisibleArchive (boolean action)
+	{
+		uneVueArchives.setVisible(action);
+	}
 	public VueGenerale()
 	{
 		this.setTitle("Application  Commandes");
@@ -47,12 +53,16 @@ public class VueGenerale extends JFrame implements ActionListener
 		this.btCommandes.setBounds(350, 100, 200, 50);
 		this.add(this.btCommandes);
 		
-		this.btQuitter.setBounds(200, 200, 200, 50);
+		this.btQuitter.setBounds(350, 200, 200, 50);
 		this.add(this.btQuitter);
+		
+		this.btArchive.setBounds(100, 200, 200, 50);;
+		this.add(this.btArchive);
 		
 		this.btQuitter.addActionListener(this);
 		this.btCommandes.addActionListener(this);
 		this.btUsers.addActionListener(this);
+		this.btArchive.addActionListener(this);
 		
 		
 		this.setVisible(false);
@@ -68,11 +78,15 @@ public class VueGenerale extends JFrame implements ActionListener
 		{
 			uneVueCommandes.setVisible(true);
 			
+		}else if (e.getSource() == this.btArchive) {
+			
+			uneVueArchives.setVisible(true);
+			
 		}else if(e.getSource() == this.btQuitter)
 		{
-				this.setVisible(false);
-				Main.rendreVisible(true);
-		}
+			this.setVisible(false);
+			Main.rendreVisible(true);
+	}
 		
 	}
 }

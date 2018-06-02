@@ -14,12 +14,12 @@ import controleur.Commande;
 import controleur.Tableau;
 import modele.Modele;
 
-public class PanelListercommande extends JPanel implements ActionListener{
+public class PanelExtraction extends JPanel implements ActionListener{
 
 	private JTable tablecommande;	
 	private Tableau unTableau;
 	
-	public PanelListercommande() {
+	public PanelExtraction() {
 		this.setBounds(150, 50, 500, 300);
 		this.setBackground(Color.gray);
 		this.setLayout(null);

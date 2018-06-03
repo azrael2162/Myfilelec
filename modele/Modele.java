@@ -300,9 +300,9 @@ public class Modele {
 					String uti_prenom = unRes.getString("uti_prenom");
 					String fact_reglement = unRes.getString("fact_reglement");
 					int fact_prix = unRes.getInt("fact_prix");
-					
+					int  fact_quantite = unRes.getInt("fact_quantite");
 
-					Archive uneArchive = new Archive(uti_nom, uti_prenom, fact_reglement, fact_prix);
+					Archive uneArchive = new Archive(uti_nom, uti_prenom, fact_reglement, fact_prix,fact_quantite);
 					lesArchives.add(uneArchive);
 				}
 				unStat.close();

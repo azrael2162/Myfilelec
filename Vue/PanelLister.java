@@ -20,7 +20,6 @@ public class PanelLister extends JPanel implements ActionListener{
 	
 	public PanelLister() {
 		this.setBounds(130, 50, 370, 300);
-		this.setBackground(Color.gray);
 		this.setLayout(null);
 		
 		//construction de la JTable

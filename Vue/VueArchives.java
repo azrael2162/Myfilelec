@@ -13,8 +13,8 @@ public class VueArchives extends JFrame implements ActionListener{
 	private JPanel panelMenu = new JPanel();
 	private JButton btTab[] = new JButton[4];
 	private String tab []= {"Lister","Extraire","Supprimer","Quitter"};		
-	private static PanelListercommande unPanelLister = new PanelListercommande();
-	private static PanelAjoutcommande uneExtration = new PanelAjoutcommande();
+	private static Panelarchiveliste unPanelLister = new Panelarchiveliste();
+	private static PanelExtraction uneExtration = new PanelExtraction();
 	private static PanelSupprimercommande unPanelSupprimer= new PanelSupprimercommande();
 	
 	public VueArchives() {

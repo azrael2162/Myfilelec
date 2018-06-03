@@ -7,19 +7,21 @@ package controleur;
 */
 public class Archive {
 	private String uti_nom,uti_prenom,fact_reglement;
-	private int fact_prix;
+	private int fact_prix,fact_quantite;
 	
 	public Archive() {
 		this.uti_nom = "";
 		this.uti_prenom = "";
 		this.fact_reglement ="";
 		this.fact_prix = 0;
+		this.fact_quantite=0;
 	}
-	public Archive(String uti_nom,String uti_prenom,String fact_reglement,int fact_prix) {
+	public Archive(String uti_nom,String uti_prenom,String fact_reglement,int fact_prix,int fact_quantite) {
 		this.uti_nom = uti_nom;
 		this.uti_prenom = uti_prenom;
 		this.fact_reglement =fact_reglement;
 		this.fact_prix = fact_prix;
+		this.fact_quantite = fact_quantite;
 	}
 	public String getUti_nom() {
 		return uti_nom;
@@ -45,6 +47,13 @@ public class Archive {
 	public void setFact_prix(int fact_prix) {
 		this.fact_prix = fact_prix;
 	}
+	public int getFact_quantite() {
+		return fact_quantite;
+	}
+	public void setFact_quantite(int fact_quantite) {
+		this.fact_quantite = fact_quantite;
+	}
+	
 	
 
 }

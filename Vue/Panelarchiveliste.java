@@ -10,6 +10,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 import controleur.User;
+import controleur.Archive;
 import controleur.Commande;
 import controleur.Tableau;
 import modele.Modele;
@@ -21,11 +22,10 @@ public class Panelarchiveliste extends JPanel implements ActionListener{
 	
 	public Panelarchiveliste() {
 		this.setBounds(150, 50, 500, 300);
-		this.setBackground(Color.gray);
 		this.setLayout(null);
 		
 		//construction de la JTable
-		String entetes []= {"uti_nom", "uti_prenom","fact_reglement","fact_prix"};
+		String entetes []= {"Nom", "Prenom","Date de facturation","Prix de la facture","quantité"};
 		Object [][]donnees = this.getDonnees();
 		unTableau = new Tableau(donnees, entetes);
 		this.tableArchvie = new JTable(unTableau);
@@ -38,16 +38,15 @@ public class Panelarchiveliste extends JPanel implements ActionListener{
 		this.setVisible(false);
 	}
 	private Object [][] getDonnees() {
-		ArrayList<Commande> lesCmds = Modele.selectAllCom();
-		Object donnees[][] = new Object [lesCmds.size()][6];
+		ArrayList<Archive> lesArchs = Modele.selectAllarch();
+		Object donnees[][] = new Object [lesArchs.size()][5];
 		int i =0;
-		for (Commande uneCmde : lesCmds) {
-			donnees[i][0] = uneCmde.getCom_num()+"";
-			donnees[i][1] = uneCmde.getCom_date();
-			donnees[i][2] = uneCmde.getCom_text();
-			donnees[i][3] = uneCmde.getCom_prest();
-			donnees[i][4] = uneCmde.getFact_num();
-			donnees[i][5] = uneCmde.getUti_id();
+		for (Archive uneArch : lesArchs) {
+			donnees[i][0] = uneArch.getUti_nom()+"";
+			donnees[i][1] = uneArch.getUti_prenom();
+			donnees[i][2] = uneArch.getFact_reglement();
+			donnees[i][3] = uneArch.getFact_prix();
+			donnees[i][4] = uneArch.getFact_quantite();
 			i++;
 		}
 		return donnees;

@@ -51,7 +51,7 @@ CREATE TABLE PRODUITS(
         marque_pro VARCHAR (10) ,
         stock_pro    Int ,
         prixunit_pro Float ,
-        note		 int(2),
+        note	     int(2),
         PRIMARY KEY (id_pro )
 )ENGINE=InnoDB;
 
@@ -200,11 +200,14 @@ CREATE TABLE fournir(
 
 DROP TABLE IF EXISTS comporter;
 CREATE TABLE comporter(
-        qte_livr Int ,
+        qte_livr Int  ,
         id_pro   Int NOT NULL ,
+        uti_id   Int NOT NULL ,
         id_livr  Int NOT NULL ,
-        PRIMARY KEY (id_pro ,id_livr ),
-        FOREIGN KEY (id_pro) REFERENCES PRODUITS(id_pro)
+        PRIMARY KEY (id_pro ,id_livr,uti_id ),
+        FOREIGN KEY (id_pro) REFERENCES PRODUITS(id_pro),
+        FOREIGN KEY (uti_id) REFERENCES UTILISATEUR(uti_id)
+
 )ENGINE=InnoDB;
 
 
@@ -234,16 +237,13 @@ CREATE TABLE installer(
         FOREIGN KEY (id_pro) REFERENCES PRODUITS(id_pro)
 )ENGINE=InnoDB;
 
-#------------------------------------------------------------
-# Les liaisons
-#------------------------------------------------------------
 
 
 #------------------------------------------------------------
 # Trigger
 #------------------------------------------------------------
-#trigger1
-#dropp l user grp_id = 3 dans la table client
+#trigger1 
+#dropp l user grp_id = 3 dans la table client 
 
 DROP Trigger if exists ajoutclient;
 DELIMITER //
@@ -259,6 +259,22 @@ END IF ;
 END //
 DELIMITER ;
 
+#trigger2
+#drope les factures dans la tablee commande
+
+DROP Trigger if exists factComm;
+DELIMITER // 
+CREATE Trigger factComm
+AFTER INSERT ON FACTURE
+FOR EACH ROW
+BEGIN
+IF new.fact_num >= 1
+THEN
+INSERT INTO COMMANDE (com_num,com_date,com_text,fact_num,uti_id)
+VALUES (NULL,new.fact_reglement,new.fact_nom,new.uti_id,new.fact_num);
+END IF ;
+END //
+DELIMITER ;
 
 
 #trigger3
@@ -318,20 +334,20 @@ insert into PRODUITS (id_pro,nom_pro,image_pro,type_pro,marque_pro,stock_pro,pri
   (10,'MSI A320M GAMING PRO','https://www.msi.com/asset/resize/image/global/product/product_6_20170407103908_58e6fbccf2ace.png62405b38c58fe0f07fcef2367d8a9ba1/600.png','Carte-Mere','MSI-MB','40','78'),
   (11,'AMD A10-7870K','https://avadirect-freedomusainc1.netdna-ssl.com/Pictures/big/10347023_2.png','CPU','AMD','40','78'),
   (12,'HyperX Fury 16 Go (2x 8Go)','http://cicindele.com.free.fr/Blogger/LD0001545856_2_0001545915.png','RAM','HyperX','40','152'),
-  (13,'ASUS 210-SL-TC1GD3-L','http://picscdn.redblue.de/doi/pixelboxx-mss-57907779/fee_325_225_png/ASUS-210-SL-TC1GD3-L','Carte-Graphique','ASUS','40','32');
+  (13,'ASUS 210-SL-TC1GD3-L','http://picscdn.redblue.de/doi/pixelboxx-mss-57907779/fee_325_225_png/ASUS-210-SL-TC1GD3-L','Carte-Graphique','ASUS','40','32'),
+  (14,'SEGATE BarraCuda 3 To','https://images.grosbill.com/imagesproduitnew/imagesgallery/BIG/302799.jpg','HDD','SEAGATE','10','32');
 
 
 INSERT INTO `FACTURE` VALUES
 (NULL, '1', '350', '2018-05-01', '9 rue ambroise thomas', '9200', 'Courbevoie', 'France', 'Intel Core i7-6700K',1);
 
 
- #-----------------------------------------------------------
- #VUES 
- #-----------------------------------------------------------
+#--------------------------------------------------------------
+# Vues 
+#--------------------------------------------------------------
 
-CREATE VIEW  infoArchive as
-SELECT uti_nom, uti_prenom, fact_prix 
-FROM archive, utilisateur, facture 
-WHERE archive.fact_num = facture.fact_num 
+CREATE VIEW infoarch as 
+SELECT uti_nom,uti_prenom,fact_reglement, fact_prix , fact_quantite
+FROM archive, utilisateur, facture
+WHERE archive.fact_num = facture.fact_num
 AND facture.uti_id = utilisateur.uti_id;
-

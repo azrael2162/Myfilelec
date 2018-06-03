@@ -239,31 +239,13 @@ CREATE TABLE installer(
 
 
 
-#------------------------------------------------------------
-# Trigger
-#------------------------------------------------------------
-#trigger1 
-#dropp l user grp_id = 3 dans la table client 
 
-DROP Trigger if exists ajoutclient;
-DELIMITER //
-CREATE Trigger ajoutclient
-AFTER INSERT ON UTILISATEUR
-FOR EACH ROW
-BEGIN
-IF new.grp_id = 3
-THEN
-INSERT INTO client(uti_id,uti_nom,uti_prenom)
-  VALUES(new.uti_id,new.uti_nom,new.uti_prenom);
-END IF ;
-END //
-DELIMITER ;
 
 #trigger2
 #drope les factures dans la tablee commande
 
 DROP Trigger if exists factComm;
-DELIMITER // 
+DELIMITER //
 CREATE Trigger factComm
 AFTER INSERT ON FACTURE
 FOR EACH ROW
@@ -343,11 +325,11 @@ INSERT INTO `FACTURE` VALUES
 
 
 #--------------------------------------------------------------
-# Vues 
+# Vues
 #--------------------------------------------------------------
 
-CREATE VIEW infoarch as 
+CREATE VIEW infoarch as
 SELECT uti_nom,uti_prenom,fact_reglement, fact_prix , fact_quantite
-FROM archive, utilisateur, facture
-WHERE archive.fact_num = facture.fact_num
-AND facture.uti_id = utilisateur.uti_id;
+FROM archive, UTILISATEUR, FACTURE
+WHERE archive.fact_num = FACTURE.fact_num
+AND FACTURE.uti_id = UTILISATEUR.uti_id;
